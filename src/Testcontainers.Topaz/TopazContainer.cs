@@ -33,6 +33,9 @@ public sealed class TopazContainer : DockerContainer
     /// <summary>Port for the Event Hub AMQP endpoint.</summary>
     public const ushort EventHubAmqpPort = 8888;
 
+    /// <summary>Port for the HTTP CONNECT proxy (used for ROPC <c>az login</c> from the host).</summary>
+    public const ushort ConnectProxyPort = 44380;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TopazContainer" /> class.
     /// </summary>

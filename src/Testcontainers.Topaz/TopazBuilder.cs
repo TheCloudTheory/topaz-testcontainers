@@ -112,6 +112,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
             .WithPortBinding(TopazContainer.ServiceBusAmqpPort, TopazContainer.ServiceBusAmqpPort)
             .WithPortBinding(TopazContainer.ServiceBusHttpPort, TopazContainer.ServiceBusHttpPort)
             .WithPortBinding(TopazContainer.EventHubAmqpPort, TopazContainer.EventHubAmqpPort)
+            .WithPortBinding(TopazContainer.ConnectProxyPort, TopazContainer.ConnectProxyPort)
             .WithResourceMapping(Encoding.UTF8.GetBytes(certPem), "/app/topaz.crt")
             .WithResourceMapping(Encoding.UTF8.GetBytes(keyPem), "/app/topaz.key")
             .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Topaz is ready"));
