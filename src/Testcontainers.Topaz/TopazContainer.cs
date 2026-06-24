@@ -74,10 +74,10 @@ public sealed class TopazContainer : DockerContainer
         => new($"https://{accountName}.table.storage.topaz.local.dev:{GetMappedPublicPort(StoragePort)}");
 
     /// <summary>
-    /// Gets the Cosmos DB URI.
+    /// Gets the Cosmos DB URI for the given account.
     /// </summary>
-    public Uri GetCosmosDbUri()
-        => new($"https://topaz.local.dev:{GetMappedPublicPort(CosmosDbPort)}");
+    public Uri GetCosmosDbUri(string accountName)
+        => new($"https://{accountName}.documents.topaz.local.dev:{GetMappedPublicPort(CosmosDbPort)}/");
 
     /// <summary>
     /// Gets the Container Registry URI for the given registry name.

@@ -84,6 +84,9 @@ public sealed class MyServiceTests : IAsyncLifetime
     {
         var blobUri = _topaz.GetStorageBlobUri("myaccount");
         // Use blobUri with Azure.Storage.Blobs.BlobServiceClient ...
+
+        var cosmosUri = _topaz.GetCosmosDbUri("mycosmosaccount");
+        // Use cosmosUri with Microsoft.Azure.Cosmos.CosmosClient ...
     }
 }
 ```
@@ -152,7 +155,7 @@ typed URI helpers (`GetStorageBlobUri`, `GetKeyVaultUri`, etc.) to retrieve them
 | `GetStorageBlobUri(account)` | `https://{account}.blob.storage.topaz.local.dev:{port}` |
 | `GetStorageQueueUri(account)` | `https://{account}.queue.storage.topaz.local.dev:{port}` |
 | `GetStorageTableUri(account)` | `https://{account}.table.storage.topaz.local.dev:{port}` |
-| `GetCosmosDbUri()` | `https://topaz.local.dev:{port}` |
+| `GetCosmosDbUri(account)` | `https://{account}.documents.topaz.local.dev:{port}/` |
 | `GetContainerRegistryUri(name)` | `https://{name}.cr.topaz.local.dev:{port}` |
 | `GetServiceBusAmqpUri(ns)` | `amqp://{ns}.servicebus.topaz.local.dev:{port}` |
 | `GetServiceBusHttpUri(ns)` | `https://{ns}.servicebus.topaz.local.dev:{port}` |
