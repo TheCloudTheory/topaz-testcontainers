@@ -5,7 +5,7 @@ A [Testcontainers](https://dotnet.testcontainers.org/) module for [Topaz](https:
 ## Installation
 
 ```shell
-dotnet add package Testcontainers.Topaz
+dotnet add package TheCloudTheory.Topaz.Testcontainers
 ```
 
 ## Prerequisites
