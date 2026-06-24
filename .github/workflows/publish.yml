@@ -22,6 +22,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Run unit tests
+      run: dotnet test ./tests/Testcontainers.Topaz.Tests/Testcontainers.Topaz.Tests.csproj --filter "FullyQualifiedName~TopazBuilderTest" -c Release
     - name: Pack NuGet package
       run: dotnet pack ./src/Testcontainers.Topaz/Testcontainers.Topaz.csproj -c Release --include-symbols -o ./publish
     - name: NuGet login
