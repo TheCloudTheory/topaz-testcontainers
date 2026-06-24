@@ -1,0 +1,4 @@
+src/Testcontainers.Topaz/obj/**
+src/Testcontainers.Topaz/bin/**
+tests/Testcontainers.Topaz.Tests/bin/**
+tests/Testcontainers.Topaz.Tests/obj/**
