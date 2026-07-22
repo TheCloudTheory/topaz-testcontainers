@@ -17,6 +17,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
     public TopazBuilder(bool useNightlyImage = false)
         : this(new TopazConfiguration(), useNightlyImage)
     {
+        DockerResourceConfiguration = Init().DockerResourceConfiguration;
     }
 
     private TopazBuilder(TopazConfiguration resourceConfiguration, bool useNightlyImage)
