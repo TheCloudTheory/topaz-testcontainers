@@ -7,19 +7,22 @@ namespace Testcontainers.Topaz;
 public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer, TopazConfiguration>
 {
     public const string TopazImage = "thecloudtheory/topaz-host";
+    public const string TopazNightlyImage = "thecloudtheory/topaz-host:nightly";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TopazBuilder" /> class.
     /// </summary>
-    public TopazBuilder()
-        : this(new TopazConfiguration())
+    private readonly bool _useNightlyImage;
+
+    public TopazBuilder(bool useNightlyImage = false)
+        : this(new TopazConfiguration(), useNightlyImage)
     {
-        DockerResourceConfiguration = Init().DockerResourceConfiguration;
     }
 
-    private TopazBuilder(TopazConfiguration resourceConfiguration)
+    private TopazBuilder(TopazConfiguration resourceConfiguration, bool useNightlyImage)
         : base(resourceConfiguration)
     {
+        _useNightlyImage = useNightlyImage;
         DockerResourceConfiguration = resourceConfiguration;
     }
 
@@ -101,7 +104,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
         var (certPem, keyPem) = ReadEmbeddedCerts();
 
         return base.Init()
-            .WithImage(TopazImage)
+            .WithImage(_useNightlyImage ? TopazNightlyImage : TopazImage)
             .WithPortBinding(TopazContainer.ResourceManagerPort, TopazContainer.ResourceManagerPort)
             .WithPortBinding(TopazContainer.KeyVaultPort, TopazContainer.KeyVaultPort)
             .WithPortBinding(TopazContainer.EventHubHttpPort, TopazContainer.EventHubHttpPort)
@@ -128,7 +131,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
 
     /// <inheritdoc />
     protected override TopazBuilder Merge(TopazConfiguration oldValue, TopazConfiguration newValue)
-        => new(new TopazConfiguration(oldValue, newValue));
+        => new(new TopazConfiguration(oldValue, newValue), _useNightlyImage);
 
     private static (string CertPem, string KeyPem) ReadEmbeddedCerts()
     {

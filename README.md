@@ -59,6 +59,14 @@ See the usage example below — no certificate validation bypass is needed.
 
 ## Usage
 
+To use the nightly image instead of the latest stable release, pass `useNightlyImage: true` to the builder:
+
+```csharp
+var _topaz = new TopazBuilder(useNightlyImage: true).Build();
+```
+
+## Usage
+
 ```csharp
 public sealed class MyServiceTests : IAsyncLifetime
 {
