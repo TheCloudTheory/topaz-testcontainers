@@ -6,8 +6,8 @@ namespace Testcontainers.Topaz;
 /// <inheritdoc cref="ContainerBuilder{TBuilderEntity, TContainerEntity, TConfigurationEntity}" />
 public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer, TopazConfiguration>
 {
-    public const string TopazImage = "thecloudtheory/topaz-host";
-    public const string TopazNightlyImage = "thecloudtheory/topaz-host:nightly";
+    private const string TopazImage = "thecloudtheory/topaz-host";
+    private const string TopazNightlyImage = "thecloudtheory/topaz-host:nightly";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TopazBuilder" /> class.
@@ -80,7 +80,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
             args.Add(DockerResourceConfiguration.EmulatorIpAddress);
         }
 
-        return args.ToArray();
+        return [.. args];
     }
 
     /// <summary>Sets the log level for the Topaz host process.</summary>
@@ -117,6 +117,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
             .WithPortBinding(TopazContainer.ServiceBusHttpPort, TopazContainer.ServiceBusHttpPort)
             .WithPortBinding(TopazContainer.EventHubAmqpPort, TopazContainer.EventHubAmqpPort)
             .WithPortBinding(TopazContainer.ConnectProxyPort, TopazContainer.ConnectProxyPort)
+            .WithPortBinding(TopazContainer.AppConfigurationPort, TopazContainer.AppConfigurationPort)
             .WithResourceMapping(Encoding.UTF8.GetBytes(certPem), "/app/topaz.crt")
             .WithResourceMapping(Encoding.UTF8.GetBytes(keyPem), "/app/topaz.key")
             .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Topaz is ready"));

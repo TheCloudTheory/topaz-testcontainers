@@ -37,6 +37,11 @@ public sealed class TopazContainer : DockerContainer
     public const ushort ConnectProxyPort = 44380;
 
     /// <summary>
+    /// Port for the App Configuration endpoint
+    /// </summary>
+    public const ushort AppConfigurationPort = 8893;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="TopazContainer" /> class.
     /// </summary>
     /// <param name="configuration">The container configuration.</param>
@@ -117,6 +122,12 @@ public sealed class TopazContainer : DockerContainer
     /// </summary>
     public Uri GetAppServiceUri(string appName)
         => new($"https://{appName}.scm.azurewebsites.topaz.local.dev:{GetMappedPublicPort(AppServicePort)}");
+    
+    /// <summary>
+    /// Gets the App Service / Kudu URI for the given app name.
+    /// </summary>
+    public Uri GetAppConfigurationUri(string storeName)
+        => new($"https://{storeName}.azconfig.topaz.local.dev:{GetMappedPublicPort(AppConfigurationPort)}");
 
     /// <summary>
     /// Returns the PEM-encoded certificate bundled with this package.
@@ -134,7 +145,7 @@ public sealed class TopazContainer : DockerContainer
     /// <summary>
     /// Returns the Topaz self-signed certificate as an <see cref="X509Certificate2" />.
     /// </summary>
-    public static X509Certificate2 GetCertificate()
+    private static X509Certificate2 GetCertificate()
         => X509Certificate2.CreateFromPem(GetCertificatePem());
 
     /// <summary>

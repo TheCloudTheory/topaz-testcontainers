@@ -150,6 +150,7 @@ await myContainer.ExecAsync(["/bin/sh", "-c",
 | `EventHubAmqpPort` | 8888 | Event Hubs (AMQP) |
 | `EventHubHttpPort` | 8897 | Event Hubs (HTTP) |
 | `AppServicePort` | 8896 | App Service / Kudu |
+| `AppConfiguration` | 8893 | App Configuration |
 
 All ports are mapped to random host ports. Use `GetMappedPublicPort(port)` or the
 typed URI helpers (`GetStorageBlobUri`, `GetKeyVaultUri`, etc.) to retrieve them at runtime.
@@ -170,4 +171,4 @@ typed URI helpers (`GetStorageBlobUri`, `GetKeyVaultUri`, etc.) to retrieve them
 | `GetEventHubAmqpUri(ns)` | `amqp://{ns}.eventhub.topaz.local.dev:{port}` |
 | `GetEventHubHttpUri(ns)` | `https://{ns}.eventhub.topaz.local.dev:{port}` |
 | `GetAppServiceUri(appName)` | `https://{appName}.scm.azurewebsites.topaz.local.dev:{port}` |
-
+| `GetAppConfigurationUri(storeName)` | `https://{storeName}.azconfig.topaz.local.dev:{port}` |
