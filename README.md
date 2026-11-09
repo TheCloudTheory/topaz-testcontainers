@@ -65,6 +65,25 @@ To use the nightly image instead of the latest stable release, pass `useNightlyI
 var _topaz = new TopazBuilder(useNightlyImage: true).Build();
 ```
 
+## Persisting emulator data
+
+Topaz stores its data in `/app/.topaz` inside the container. Mount a local directory there
+to keep that data when the Testcontainers container is removed. `mounts` maps host paths
+to container paths:
+
+```csharp
+var dataDirectory = Path.GetFullPath("./topaz-data");
+Directory.CreateDirectory(dataDirectory);
+
+var topaz = new TopazBuilder(mounts: new Dictionary<string, string>
+{
+    [dataDirectory] = "/app/.topaz"
+}).Build();
+```
+
+The host directory is created if it does not exist. Keep it between test runs to reuse the
+emulator state; remove its contents when you want a clean state.
+
 ## Usage
 
 ```csharp
