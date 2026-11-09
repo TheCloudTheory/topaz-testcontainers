@@ -14,16 +14,23 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
     /// </summary>
     private readonly bool _useNightlyImage;
 
-    public TopazBuilder(bool useNightlyImage = false)
-        : this(new TopazConfiguration(), useNightlyImage)
+    /// <summary>
+    /// Stores the optional path mappings to mount into the Topaz container.
+    /// </summary>
+    private readonly Dictionary<string, string>? _mounts;
+
+    public TopazBuilder(bool useNightlyImage = false, Dictionary<string, string>? mounts = null)
+        : this(new TopazConfiguration(), useNightlyImage, mounts)
     {
         DockerResourceConfiguration = Init().DockerResourceConfiguration;
     }
 
-    private TopazBuilder(TopazConfiguration resourceConfiguration, bool useNightlyImage)
+    private TopazBuilder(TopazConfiguration resourceConfiguration, bool useNightlyImage, Dictionary<string, string>? mounts)
         : base(resourceConfiguration)
     {
         _useNightlyImage = useNightlyImage;
+        _mounts = mounts;
+        
         DockerResourceConfiguration = resourceConfiguration;
     }
 
@@ -74,11 +81,10 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
                 args.Add("--refresh-log=false");
         }
 
-        if (!string.IsNullOrEmpty(DockerResourceConfiguration.EmulatorIpAddress))
-        {
-            args.Add("--emulator-ip-address");
-            args.Add(DockerResourceConfiguration.EmulatorIpAddress);
-        }
+        if (string.IsNullOrEmpty(DockerResourceConfiguration.EmulatorIpAddress)) return [.. args];
+        
+        args.Add("--emulator-ip-address");
+        args.Add(DockerResourceConfiguration.EmulatorIpAddress);
 
         return [.. args];
     }
@@ -104,7 +110,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
     {
         var (certPem, keyPem) = ReadEmbeddedCerts();
 
-        return base.Init()
+        var builder = base.Init()
             .WithImage(_useNightlyImage ? TopazNightlyImage : TopazImage)
             .WithPortBinding(TopazContainer.ResourceManagerPort, TopazContainer.ResourceManagerPort)
             .WithPortBinding(TopazContainer.KeyVaultPort, TopazContainer.KeyVaultPort)
@@ -121,6 +127,15 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
             .WithResourceMapping(Encoding.UTF8.GetBytes(certPem), "/app/topaz.crt")
             .WithResourceMapping(Encoding.UTF8.GetBytes(keyPem), "/app/topaz.key")
             .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged("Topaz is ready"));
+
+        if (_mounts is not { Count: > 0 }) return builder;
+        
+        foreach (var mount in _mounts)
+        {
+            builder.WithVolumeMount(mount.Key, mount.Value);
+        }
+
+        return builder;
     }
 
     /// <inheritdoc />
@@ -133,7 +148,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
 
     /// <inheritdoc />
     protected override TopazBuilder Merge(TopazConfiguration oldValue, TopazConfiguration newValue)
-        => new(new TopazConfiguration(oldValue, newValue), _useNightlyImage);
+        => new(new TopazConfiguration(oldValue, newValue), _useNightlyImage, _mounts);
 
     private static (string CertPem, string KeyPem) ReadEmbeddedCerts()
     {
