@@ -132,7 +132,7 @@ public sealed class TopazBuilder : ContainerBuilder<TopazBuilder, TopazContainer
         
         foreach (var mount in _mounts)
         {
-            builder.WithVolumeMount(mount.Key, mount.Value);
+            builder.WithBindMount(mount.Key, mount.Value);
         }
 
         return builder;

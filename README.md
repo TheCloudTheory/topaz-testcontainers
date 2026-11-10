@@ -68,21 +68,32 @@ var _topaz = new TopazBuilder(useNightlyImage: true).Build();
 ## Persisting emulator data
 
 Topaz stores its data in `/app/.topaz` inside the container. Mount a local directory there
-to keep that data when the Testcontainers container is removed. `mounts` maps host paths
-to container paths:
+to keep that data when the Testcontainers container is removed. Use the same host directory
+and default subscription ID each time; otherwise, the emulator may start with a different
+subscription and the saved resources will not appear. `mounts` configures bind mounts from
+host paths to container paths:
 
 ```csharp
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Testcontainers.Topaz;
+
 var dataDirectory = Path.GetFullPath("./topaz-data");
 Directory.CreateDirectory(dataDirectory);
+var subscriptionId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
-var topaz = new TopazBuilder(mounts: new Dictionary<string, string>
-{
-    [dataDirectory] = "/app/.topaz"
-}).Build();
+var topaz = new TopazBuilder(
+    mounts: new Dictionary<string, string>
+    {
+        [dataDirectory] = "/app/.topaz"
+    })
+    .WithDefaultSubscription(subscriptionId)
+    .Build();
 ```
 
-The host directory is created if it does not exist. Keep it between test runs to reuse the
-emulator state; remove its contents when you want a clean state.
+Keep the host directory and subscription ID between test runs to reuse the emulator state.
+Remove the directory contents when you want a clean state.
 
 ## Usage
 
